@@ -1,0 +1,5 @@
+Enthaltene Fremdsoftware / Third-party software:
+
+lib/waveshare_epd/ (epd2in13_V4.py, epdconfig.py)
+  Copyright (c) Waveshare team, MIT License (see the notice in each file).
+  epdconfig.py was changed to use lgpio directly instead of gpiozero.

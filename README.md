@@ -67,6 +67,6 @@ Internet freigeben.
 ## Lizenz
 
 MIT, siehe [LICENSE](LICENSE). Enthält den Display-Treiber von Waveshare (MIT, leicht
-geändert). Abfahrtsdaten: Wiener Linien, Open Government Data (CC BY 4.0). UV-Index und
+geändert, siehe [THIRD-PARTY.txt](THIRD-PARTY.txt)). Abfahrtsdaten: Wiener Linien, Open Government Data (CC BY 4.0). UV-Index und
 Temperatur: [Open-Meteo.com](https://open-meteo.com) (CC BY 4.0, frei für nicht-kommerzielle
 Nutzung).

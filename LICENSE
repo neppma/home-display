@@ -19,11 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-Enthaltene Fremdsoftware / Third-party software:
-
-lib/waveshare_epd/ (epd2in13_V4.py, epdconfig.py)
-  Copyright (c) Waveshare team, MIT License (see the notice in each file).
-  epdconfig.py was changed to use lgpio directly instead of gpiozero.
