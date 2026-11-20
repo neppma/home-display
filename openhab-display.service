@@ -1,0 +1,24 @@
+# systemd-Dienst fuer das openHAB-Display
+# Installieren:  sudo cp ~/openhab-display/openhab-display.service /etc/systemd/system/
+#                sudo systemctl daemon-reload && sudo systemctl enable --now openhab-display
+# Log ansehen:   journalctl -u openhab-display -f
+
+[Unit]
+Description=openHAB-Display (E-Paper)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=admin
+WorkingDirectory=/home/admin/openhab-display
+ExecStart=/usr/bin/python3 -u /home/admin/openhab-display/openhab_display.py
+# Fuer die Bluetooth-Pegelmessung (hcitool cc/rssi) braucht nur dieser Dienst dieses Recht,
+# CAP_NET_BIND_SERVICE fuer Port 80 (Anmeldeseite im Hotspot)
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE
+Restart=always
+RestartSec=10
+Nice=5
+
+[Install]
+WantedBy=multi-user.target

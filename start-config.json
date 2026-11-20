@@ -1,0 +1,9 @@
+{
+ "openhab_aktiv": false,
+ "haupt_aktiv": false,
+ "aktualisieren": {"modus": "zeiten", "ersatz": "zeiten",
+  "zeiten": [{"tage": [0, 1, 2, 3, 4], "von": "06:00", "bis": "09:00"},
+             {"tage": [0, 1, 2, 3, 4, 5, 6], "von": "16:00", "bis": "21:00"}]},
+ "wiener_linien": {"aktiv": true, "wechsel_s": 6, "abfahrten": []},
+ "bluetooth": {"aktiv": false, "item": ""}
+}

@@ -1,0 +1,7 @@
+__pycache__/
+config.json
+token
+hotspot_passwort
+wl_index.json
+*.pdf
+*.tar.gz

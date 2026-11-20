@@ -1,0 +1,152 @@
+{
+ "openhab": "http://openhab:8080",
+ "openhab_aktiv": false,
+ "aktualisieren": {
+  "modus": "zeiten",
+  "ersatz": "zeiten",
+  "zeiten": [
+   {
+    "tage": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "von": "06:00",
+    "bis": "22:00"
+   }
+  ]
+ },
+ "drehung": 0,
+ "messwerte_abstand_min": 5,
+ "leeren_nach_min": 5,
+ "haupt_aktiv": true,
+ "anzeige_s": 7,
+ "felder": [
+  {
+   "titel": "Außen",
+   "items": [
+    "Aussentemperatur"
+   ],
+   "stellen": 1,
+   "einheit": "°"
+  },
+  {
+   "titel": "Innen",
+   "items": [
+    "Innentemperatur"
+   ],
+   "stellen": 1,
+   "einheit": "°"
+  },
+  {
+   "titel": "Strom jetzt",
+   "items": [
+    "Strom_Leistung"
+   ],
+   "stellen": 0,
+   "einheit": " W"
+  },
+  {
+   "titel": "Strom heute",
+   "items": [
+    "Strom_Heute"
+   ],
+   "stellen": 1,
+   "einheit": " kWh"
+  }
+ ],
+ "wetter": {
+  "zustand": "localDailyForecastTodayCondition",
+  "min": "localDailyForecastTodayMinTemperature",
+  "max": "localDailyForecastTodayMaxTemperature",
+  "sonnenuntergang": "Sonnenuntergang",
+  "jetzt": "localCurrentCondition",
+  "regen_jetzt": "localCurrentRainVolume",
+  "regen_heute": "localDailyForecastTodayRainVolume",
+  "aussen": "Aussentemperatur",
+  "feuchte": "localCurrentHumidity"
+ },
+ "wetter_text": true,
+ "kleidung": {
+  "aktiv": true,
+  "feld": 0,
+  "gefuehlt": "localCurrentApparentTemperature",
+  "grenzen": [
+   20,
+   12,
+   3
+  ]
+ },
+ "uv": {
+  "aktiv": true,
+  "grenze": 6,
+  "breite": 48.21,
+  "laenge": 16.37
+ },
+ "fenster": {
+  "Fenster_Kueche": "Küche"
+ },
+ "rauchmelder": {},
+ "wassermelder_schalter": {},
+ "wassermelder_text": {},
+ "keller": {
+  "tuer": "",
+  "alarm": ""
+ },
+ "alarmanlage": {
+  "scharf": "",
+  "ausgeloest": "",
+  "still": "",
+  "gespeichert": ""
+ },
+ "anwesenheit": {
+  "vorzimmer": "Bewegung_Eingang",
+  "tuer": "",
+  "ccu_ok": "",
+  "personen": "",
+  "ich": "",
+  "simulation": ""
+ },
+ "bluetooth": {
+  "aktiv": false,
+  "adresse": "",
+  "geraetename": "",
+  "item": "Handy_Naehe",
+  "intervall_s": 10,
+  "weg_nach_s": 60,
+  "mindestpegel": null,
+  "nur_wenn_abwesend": true
+ },
+ "wiener_linien": {
+  "aktiv": true,
+  "wechsel_s": 5,
+  "rollstuhl": true,
+  "klima": true,
+  "klima_ab": 25,
+  "abfahrten": []
+ },
+ "waesche": {
+  "item": ""
+ },
+ "strom_hoch": {
+  "aktiv": true,
+  "feld": 2,
+  "grenze": 500
+ },
+ "strom_vergleich": {
+  "aktiv": false,
+  "feld": 3,
+  "leistung": "Strom_Leistung",
+  "tage": 14
+ },
+ "wlan": {
+  "hotspot": true,
+  "hotspot_ssid": "Home Display",
+  "ohne_wlan_s": 120,
+  "erneut_s": 300
+ }
+}
