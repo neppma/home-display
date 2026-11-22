@@ -793,6 +793,11 @@ def aus_hinweis():
     return ("Strom kann getrennt werden.", "Einschalten: Strom wieder anschließen")
 
 
+def laufen_minuten(wl):
+    """Wie viele Minuten man durch Laufen spart (0 = aus)."""
+    return int(wl.get("laufen_min", 2)) if wl.get("laufen", True) else 0
+
+
 def _abfahrten_zeichnen(bild, d, a):
     """Abfahrten-Seite (Vorschlag B des Nutzers): pro Abfahrt eine Zeile ohne Rahmen,
     links ein schwarzes Feld ueber die volle Zeilenhoehe mit grosser Liniennummer,
@@ -816,7 +821,16 @@ def _abfahrten_zeichnen(bild, d, a):
         d.text((lw / 2 + 0.5, mitte_y + 1), linie, font=passend(d, linie, lw - 6, 24), fill=255, anchor="mm")
         # Losgehen rechts
         mitte_x = (spalte + BREITE) / 2
-        if minuten is not None and los <= 0:
+        if minuten is not None and los < 0:
+            # Nur noch laufend erreichbar (Wunsch des Nutzers): schwarz, Laeufer, Abfahrt in X Min
+            d.rounded_rectangle((spalte, oben, BREITE - 1, ende), radius=r, fill=0)
+            d.rectangle((spalte, oben, spalte + r, ende), fill=0)
+            s = wetter_symbole.laeufer()
+            maske = Image.eval(s.convert("L"), lambda v: 255 - v)   # Figur weiss auf Schwarz
+            bild.paste(255, (spalte + 5, round(mitte_y - s.height / 2)), maske)
+            d.text((spalte + 5 + s.width + (BREITE - spalte - 10 - s.width) / 2, mitte_y + 1), f"{minuten}′",
+                   font=schrift(20, True), fill=255, anchor="mm")
+        elif minuten is not None and los <= 0:
             d.rounded_rectangle((spalte, oben, BREITE - 1, ende), radius=r, fill=0)
             d.rectangle((spalte, oben, spalte + r, ende), fill=0)
             d.text((mitte_x, mitte_y + 1), "LOS!", font=schrift(22, True), fill=255, anchor="mm")
@@ -933,7 +947,7 @@ class Gemeinsam:
         import wiener_linien
         with self.sperre:
             abruf = self.oeffis
-        return wiener_linien.zeilen(wl["abfahrten"], abruf)
+        return wiener_linien.zeilen(wl["abfahrten"], abruf, laufen_min=laufen_minuten(wl))
 
     def vorschau(self, seite="haupt", nummer=1):
         """Vorschau der Hauptansicht oder der Abfahrten-Seite Nummer `nummer` (ab 1)."""
@@ -1101,7 +1115,7 @@ def main():
             import wiener_linien
             e = cfg["wiener_linien"]["abfahrten"]
             abruf = (time.time(), wiener_linien.WienerLinien(ORDNER).abfahrten(e))
-            zeilen = wiener_linien.zeilen(e, abruf)
+            zeilen = wiener_linien.zeilen(e, abruf, laufen_min=laufen_minuten(cfg["wiener_linien"]))
         mit_oh = cfg.get("openhab_aktiv", True)
         z = zustaende_holen(items) if mit_oh else {}
         if mit_oh and cfg["strom_vergleich"]["aktiv"]:

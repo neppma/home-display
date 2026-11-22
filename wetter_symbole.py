@@ -454,3 +454,16 @@ def wagen_symbol(name):
         d.line(((1, 9), (11, 3)), fill=0)
         d.point(((5, 1), (7, 1), (5, 10), (7, 10)), fill=0)
     return b
+
+
+def laeufer():
+    """Laufende Person (18 x 22), schwarz auf weiss: Abfahrt nur noch laufend erreichbar."""
+    b = Image.new("1", (18, 22), 255)
+    d = ImageDraw.Draw(b)
+    d.ellipse((10, 0, 14, 4), fill=0)                              # Kopf
+    d.line(((11, 6), (7, 13)), fill=0, width=3)                    # Rumpf, nach vorn geneigt
+    d.line(((10, 7), (14, 10), (17, 8)), fill=0, width=2)          # vorderer Arm
+    d.line(((10, 7), (5, 8), (2, 11)), fill=0, width=2)            # hinterer Arm
+    d.line(((7, 13), (12, 16), (11, 21)), fill=0, width=2)         # vorderes Bein
+    d.line(((7, 13), (4, 18), (0, 18)), fill=0, width=2)           # hinteres Bein
+    return b

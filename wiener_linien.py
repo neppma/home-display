@@ -186,13 +186,16 @@ class WienerLinien:
         return ergebnis
 
 
-def zeilen(eintraege, abruf, jetzt=None):
+def zeilen(eintraege, abruf, jetzt=None, laufen_min=0):
     """Eine Zeile pro Abfahrt fuer die Abfahrten-Seite.
 
     Liefert Tupel (Linie, Name, Minuten bis zur Abfahrt, Losgehen-Minuten,
     weitere Abfahrten, barrierefrei, klimatisiert). Minuten sind None, wenn keine
     Abfahrt erreichbar ist. Barrierefrei/klimatisiert gelten fuer den erreichbaren Wagen.
     Beruecksichtigt die Gehzeit: es zaehlt die naechste Abfahrt, die man noch erreicht.
+    laufen_min: so viele Minuten spart man, wenn man laeuft (Wunsch des Nutzers). Eine
+    Abfahrt, die man nur laufend erreicht, kommt trotzdem; ihre Losgehen-Minuten sind
+    dann negativ (Anzeige "laufen").
     Leere Liste, wenn keine frischen Daten da sind.
     """
     if not abruf:
@@ -208,7 +211,7 @@ def zeilen(eintraege, abruf, jetzt=None):
             continue
         geh = int(e.get("gehzeit_min", 0))
         erreichbar = [(int((t - jetzt) // 60), bf, kl) for t, bf, kl in zeiten]
-        erreichbar = [x for x in erreichbar if x[0] >= geh]
+        erreichbar = [x for x in erreichbar if x[0] >= max(1, geh - laufen_min) or x[0] >= geh]
         if not erreichbar:
             ergebnis.append((e["linie"], e["name"], None, None, (), False, False))
             continue

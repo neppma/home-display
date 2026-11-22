@@ -127,6 +127,8 @@
   "rollstuhl": true,
   "klima": true,
   "klima_ab": 25,
+  "laufen": true,
+  "laufen_min": 2,
   "abfahrten": []
  },
  "waesche": {

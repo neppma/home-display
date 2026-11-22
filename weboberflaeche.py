@@ -484,6 +484,11 @@ class Web:
             wl["wechsel_s"] = min(120, max(3, int(t("wl_wechsel"))))
         except ValueError:
             fehler.append("Wiener Linien: Die Anzeigedauer muss eine ganze Zahl (Sekunden) sein.")
+        wl["laufen"] = t("wl_laufen") == "1"
+        try:
+            wl["laufen_min"] = min(10, max(1, int(t("wl_laufen_min"))))
+        except ValueError:
+            fehler.append("Wiener Linien: Die Minuten fürs Laufen müssen eine ganze Zahl sein.")
         wl["rollstuhl"] = t("wl_rollstuhl") == "1"
         wl["klima"] = t("wl_klima") == "1"
         try:
@@ -813,6 +818,14 @@ class Web:
                      f"kommt die Hauptansicht für {e(str(cfg.get('anzeige_s', 7)))} Sekunden (einstellbar im "
                      "Reiter openHAB-Display). Groß steht die Abfahrt in Minuten, darunter, wann du "
                      "losgehen musst (Abfahrt minus Gehzeit).</p>")
+        lf = " checked" if wl.get("laufen", True) else ""
+        teile.append("<div style='margin-top:10px'><input type='checkbox' name='wl_laufen' id='wl_laufen' "
+                     f"value='1'{lf}> <label for='wl_laufen' style='display:inline'>Auch Abfahrten zeigen, die "
+                     "man nur noch laufend erreicht</label></div>"
+                     "<label>Laufen spart bis zu … Minuten</label>"
+                     f"<input type='number' name='wl_laufen_min' min='1' max='10' value='{int(wl.get('laufen_min', 2))}'>"
+                     "<p class='hinweis'>Beispiel: Gehzeit 5 Minuten, Laufen spart 2. Kommt die Bim in 3 oder "
+                     "4 Minuten, steht rechts ein schwarzes Feld mit einem Läufer und der Abfahrtszeit.</p>")
         rs = " checked" if wl.get("rollstuhl", True) else ""
         km = " checked" if wl.get("klima", True) else ""
         ab = wl.get("klima_ab", 25)
@@ -962,9 +975,14 @@ class Web:
 
         wl = cfg["wiener_linien"]
         teile.append(tabelle(
-            "Abfahrten (hinter „fährt in X Min“)",
-            "Gilt für den Wagen, den du noch erreichst. Angaben der Wiener Linien in Echtzeit.",
-            [zeile(ws.wagen_symbol("rollstuhl"), "Rollstuhl",
+            "Abfahrten",
+            "Rollstuhl und Schneeflocke stehen hinter „fährt in X Min“ und gelten für den Wagen, den du "
+            "noch erreichst. Angaben der Wiener Linien in Echtzeit.",
+            [zeile(ws.laeufer(), "Läufer (weiß auf schwarz, rechts)",
+                   "Mit normalem Gehen ist diese Abfahrt nicht mehr zu schaffen, laufend schon "
+                   f"(Laufen spart bis zu {e(str(wl.get('laufen_min', 2)))} Minuten). Daneben steht, in wie "
+                   "vielen Minuten sie abfährt." + ("" if wl.get("laufen", True) else " <i>Derzeit ausgeschaltet.</i>")),
+             zeile(ws.wagen_symbol("rollstuhl"), "Rollstuhl",
                    "Der Wagen ist <b>barrierefrei</b> (Niederflur). Steht nichts da, hat er Stufen."
                    + ("" if wl.get("rollstuhl", True) else " <i>Derzeit ausgeschaltet.</i>")),
              zeile(ws.wagen_symbol("klima"), "Schneeflocke",
@@ -983,7 +1001,8 @@ class Web:
                          ("Vollbild-Alarm", "Alarmanlage, stiller Alarm, Wassermelder, Rauchmelder, Kellertür "
                           "offen. Wird sofort gezeichnet und hat Vorrang vor allem."),
                          ("Abfahrten-Seite", "Wechselt mit der Hauptansicht, solange jemand im Vorzimmer ist. "
-                          "Links die Linie, rechts groß „los in X′“ (Abfahrt minus Gehzeit), bei 0 „LOS!“. "
+                          "Links die Linie, rechts groß „los in X′“ (Abfahrt minus Gehzeit), bei 0 „LOS!“, "
+                          "nur noch laufend erreichbar: Läufer und Abfahrt in Minuten. "
                           "20 Sekunden nachdem niemand mehr da ist, wird sie weiß."),
                          ("Weißes Display", "Niemand im Vorzimmer und das Bild ist älter als die eingestellte "
                           "Zeit (Reiter Allgemein). So bleiben keine alten Werte stehen."),
