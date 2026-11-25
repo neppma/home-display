@@ -825,7 +825,7 @@ class Web:
                      "<label>Laufen spart bis zu … Minuten</label>"
                      f"<input type='number' name='wl_laufen_min' min='1' max='10' value='{int(wl.get('laufen_min', 2))}'>"
                      "<p class='hinweis'>Beispiel: Gehzeit 5 Minuten, Laufen spart 2. Kommt die Bim in 3 oder "
-                     "4 Minuten, steht rechts ein schwarzes Feld mit einem Läufer und der Abfahrtszeit.</p>")
+                     "4 Minuten, steht rechts ein schwarzes Feld mit einem Läufer und der Zeit bis zur Abfahrt in Minuten und Sekunden (z. B. 4:10).</p>")
         rs = " checked" if wl.get("rollstuhl", True) else ""
         km = " checked" if wl.get("klima", True) else ""
         ab = wl.get("klima_ab", 25)
@@ -980,8 +980,9 @@ class Web:
             "noch erreichst. Angaben der Wiener Linien in Echtzeit.",
             [zeile(ws.laeufer(), "Läufer (weiß auf schwarz, rechts)",
                    "Mit normalem Gehen ist diese Abfahrt nicht mehr zu schaffen, laufend schon "
-                   f"(Laufen spart bis zu {e(str(wl.get('laufen_min', 2)))} Minuten). Daneben steht, in wie "
-                   "vielen Minuten sie abfährt." + ("" if wl.get("laufen", True) else " <i>Derzeit ausgeschaltet.</i>")),
+                   f"(Laufen spart bis zu {e(str(wl.get('laufen_min', 2)))} Minuten). Daneben steht, wann sie "
+                   "abfährt, in Minuten und Sekunden (4:10 = in 4 Minuten 10 Sekunden, in 10-Sekunden-Schritten "
+                   "abgerundet; gilt beim Anzeigen der Seite)." + ("" if wl.get("laufen", True) else " <i>Derzeit ausgeschaltet.</i>")),
              zeile(ws.wagen_symbol("rollstuhl"), "Rollstuhl",
                    "Der Wagen ist <b>barrierefrei</b> (Niederflur). Steht nichts da, hat er Stufen."
                    + ("" if wl.get("rollstuhl", True) else " <i>Derzeit ausgeschaltet.</i>")),
@@ -1002,7 +1003,7 @@ class Web:
                           "offen. Wird sofort gezeichnet und hat Vorrang vor allem."),
                          ("Abfahrten-Seite", "Wechselt mit der Hauptansicht, solange jemand im Vorzimmer ist. "
                           "Links die Linie, rechts groß „los in X′“ (Abfahrt minus Gehzeit), bei 0 „LOS!“, "
-                          "nur noch laufend erreichbar: Läufer und Abfahrt in Minuten. "
+                          "nur noch laufend erreichbar: Läufer und Abfahrt in Minuten und Sekunden (4:10). "
                           "20 Sekunden nachdem niemand mehr da ist, wird sie weiß."),
                          ("Weißes Display", "Niemand im Vorzimmer und das Bild ist älter als die eingestellte "
                           "Zeit (Reiter Allgemein). So bleiben keine alten Werte stehen."),

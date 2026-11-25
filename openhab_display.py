@@ -446,7 +446,7 @@ def anzeige_berechnen(cfg, z, getrennt_seit, abfahrten=None):
         # Temperatur immer von Open-Meteo, damit es auch ohne openHAB gleich funktioniert
         aussen = zahl(z.get(TEMP_ITEM))
         heiss = bool(wl.get("klima")) and aussen is not None and aussen > wl.get("klima_ab", 25)
-        abfahrten = [(*zl[:5], bool(wl.get("rollstuhl")) and zl[5], heiss and zl[6]) for zl in abfahrten]
+        abfahrten = [(*zl[:5], bool(wl.get("rollstuhl")) and zl[5], heiss and zl[6], *zl[7:]) for zl in abfahrten]
 
     t = time.localtime()
     datum = f"{WOCHENTAGE[t.tm_wday]} {t.tm_mday:02d}.{t.tm_mon:02d}."
@@ -811,7 +811,8 @@ def _abfahrten_zeichnen(bild, d, a):
     lw = 44                                # Breite des Linienfelds
     spalte = BREITE - 66                   # linke Kante der Losgehen-Spalte
     r = 5                                  # Eckenradius
-    for i, (linie, name, minuten, los, danach, rollstuhl, klima) in enumerate(zeilen):
+    for i, (linie, name, minuten, los, danach, rollstuhl, klima, *rest) in enumerate(zeilen):
+        sek = rest[0] if rest else None
         oben = round(i * (zh + luecke))
         ende = round(i * (zh + luecke) + zh) - 1
         mitte_y = (oben + ende) / 2
@@ -828,8 +829,11 @@ def _abfahrten_zeichnen(bild, d, a):
             s = wetter_symbole.laeufer()
             maske = Image.eval(s.convert("L"), lambda v: 255 - v)   # Figur weiss auf Schwarz
             bild.paste(255, (spalte + 5, round(mitte_y - s.height / 2)), maske)
-            d.text((spalte + 5 + s.width + (BREITE - spalte - 10 - s.width) / 2, mitte_y + 1), f"{minuten}′",
-                   font=schrift(20, True), fill=255, anchor="mm")
+            # Abfahrt mit Sekunden (Wunsch des Nutzers: beim Laufen zaehlt jede Sekunde)
+            zeit = f"{sek // 60}:{sek % 60:02d}" if sek is not None else f"{minuten}′"
+            platz = BREITE - spalte - s.width - 10
+            d.text((spalte + 7 + s.width + platz / 2, mitte_y + 1), zeit,
+                   font=passend(d, zeit, platz, 20), fill=255, anchor="mm")
         elif minuten is not None and los <= 0:
             d.rounded_rectangle((spalte, oben, BREITE - 1, ende), radius=r, fill=0)
             d.rectangle((spalte, oben, spalte + r, ende), fill=0)

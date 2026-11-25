@@ -190,7 +190,8 @@ def zeilen(eintraege, abruf, jetzt=None, laufen_min=0):
     """Eine Zeile pro Abfahrt fuer die Abfahrten-Seite.
 
     Liefert Tupel (Linie, Name, Minuten bis zur Abfahrt, Losgehen-Minuten,
-    weitere Abfahrten, barrierefrei, klimatisiert). Minuten sind None, wenn keine
+    weitere Abfahrten, barrierefrei, klimatisiert, Sekunden bis zur Abfahrt auf 10 s
+    abgerundet, fuer die Anzeige "laufen"). Minuten sind None, wenn keine
     Abfahrt erreichbar ist. Barrierefrei/klimatisiert gelten fuer den erreichbaren Wagen.
     Beruecksichtigt die Gehzeit: es zaehlt die naechste Abfahrt, die man noch erreicht.
     laufen_min: so viele Minuten spart man, wenn man laeuft (Wunsch des Nutzers). Eine
@@ -213,8 +214,10 @@ def zeilen(eintraege, abruf, jetzt=None, laufen_min=0):
         erreichbar = [(int((t - jetzt) // 60), bf, kl) for t, bf, kl in zeiten]
         erreichbar = [x for x in erreichbar if x[0] >= max(1, geh - laufen_min) or x[0] >= geh]
         if not erreichbar:
-            ergebnis.append((e["linie"], e["name"], None, None, (), False, False))
+            ergebnis.append((e["linie"], e["name"], None, None, (), False, False, None))
             continue
         m, bf, kl = erreichbar[0]
-        ergebnis.append((e["linie"], e["name"], m, m - geh, tuple(x[0] for x in erreichbar[1:3]), bf, kl))
+        t = next(t for t, _, _ in zeiten if int((t - jetzt) // 60) == m)
+        sek = max(0, int(t - jetzt)) // 10 * 10   # 10er-Schritte: nicht jede Sekunde neu zeichnen
+        ergebnis.append((e["linie"], e["name"], m, m - geh, tuple(x[0] for x in erreichbar[1:3]), bf, kl, sek))
     return ergebnis
